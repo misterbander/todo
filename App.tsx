@@ -1,107 +1,32 @@
-import React, { useState } from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  Pressable
-} from 'react-native';
-import { Realm, createRealmContext } from '@realm/react';
-class Task extends Realm.Object {
-  _id!: Realm.BSON.ObjectId;
-  description!: string;
-  isComplete!: boolean;
-  createdAt!: Date;
+import React from 'react';
+import { useColorScheme } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RootStackParamList } from './app/RootStackParamList';
+import TodoListScreen from './app/TodoListScreen';
+import { darkTheme, lightTheme } from './app/constants';
 
-  static generate(description: string) {
-    return {
-      _id: new Realm.BSON.ObjectId(),
-      description,
-      createdAt: new Date()
-    };
-  }
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-  static schema = {
-    name: 'Task',
-    primaryKey: '_id',
-    properties: {
-      _id: 'objectId',
-      description: 'string',
-      isComplete: { type: 'bool', default: false },
-      createdAt: 'date'
-    }
-  };
-}
-
-const { RealmProvider, useRealm, useQuery } = createRealmContext({
-  schema: [Task]
-});
-
-export default function AppWrapper() {
-  return (
-    <RealmProvider>
-      <TaskApp />
-    </RealmProvider>
-  );
-}
-
-function TaskApp() {
-  const realm = useRealm();
-  const tasks = useQuery(Task);
-  const [newDescription, setNewDescription] = useState('');
+export default function App() {
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <SafeAreaView>
-      <View
-        style={{ flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
-        <TextInput
-          value={newDescription}
-          placeholder="Enter new task description"
-          onChangeText={setNewDescription}
+    <NavigationContainer theme={theme}>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: theme.colors.background
+          },
+          headerShadowVisible: false
+        }}>
+        <Stack.Screen
+          name="TodoList"
+          component={TodoListScreen}
+          options={{ title: 'Todo List' }}
         />
-        <Pressable
-          onPress={() => {
-            realm.write(() => {
-              realm.create('Task', Task.generate(newDescription));
-            });
-            setNewDescription('');
-          }}>
-          <Text>➕</Text>
-        </Pressable>
-      </View>
-      <FlatList
-        data={tasks.sorted('createdAt')}
-        keyExtractor={item => item._id.toHexString()}
-        renderItem={({ item }) => {
-          return (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                margin: 10
-              }}>
-              <Pressable
-                onPress={() =>
-                  realm.write(() => {
-                    item.isComplete = !item.isComplete;
-                  })
-                }>
-                <Text>{item.isComplete ? '✅' : '☑️'}</Text>
-              </Pressable>
-              <Text style={{ paddingHorizontal: 10 }}>{item.description}</Text>
-              <Pressable
-                onPress={() => {
-                  realm.write(() => {
-                    realm.delete(item);
-                  });
-                }}>
-                <Text>{'🗑️'}</Text>
-              </Pressable>
-            </View>
-          );
-        }}
-      />
-    </SafeAreaView>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
