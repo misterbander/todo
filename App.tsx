@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './app/RootStackParamList';
 import TodoListScreen from './app/TodoListScreen';
+import TodoDetailsScreen from './app/TodoDetailsScreen';
 import { darkTheme, lightTheme } from './app/constants';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,6 +26,11 @@ export default function App() {
           name="TodoList"
           component={TodoListScreen}
           options={{ title: 'Todo List' }}
+        />
+        <Stack.Screen
+          name="TodoDetails"
+          component={TodoDetailsScreen}
+          options={{ title: '' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

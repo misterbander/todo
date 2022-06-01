@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Theme, useTheme } from '@react-navigation/native';
+import { Theme, useNavigation, useTheme } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
+import { RootStackParamList } from '../RootStackParamList';
 import RoundIconButton from './RoundIconButton';
 import editIcon from '../images/edit.png';
 import deleteIcon from '../images/delete.png';
@@ -16,6 +18,8 @@ export default function TodoListItem({
     updatedAt: Date;
   };
 }) {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const styles = getStyles(useTheme());
 
   return (
@@ -37,6 +41,9 @@ export default function TodoListItem({
           buttonStyle={styles.roundButton}
           iconStyle={styles.roundButtonIcon}
           icon={editIcon}
+          onPress={() => {
+            navigation.navigate('TodoDetails');
+          }}
         />
         <RoundIconButton
           buttonStyle={styles.roundButton}
