@@ -5,19 +5,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
 import { RootStackParamList } from '../RootStackParamList';
 import RoundIconButton from './RoundIconButton';
+import { Todo } from '../model/Todo';
 import editIcon from '../images/edit.png';
 import deleteIcon from '../images/delete.png';
 
-export default function TodoListItem({
-  todo
-}: {
-  todo: {
-    title: string;
-    description: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-}) {
+export default function TodoListItem({ todo }: TodoListItemProps) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const styles = getStyles(useTheme());
@@ -42,7 +34,9 @@ export default function TodoListItem({
           iconStyle={styles.roundButtonIcon}
           icon={editIcon}
           onPress={() => {
-            navigation.navigate('TodoDetails');
+            navigation.navigate('TodoDetails', {
+              id: todo._id.toHexString()
+            });
           }}
         />
         <RoundIconButton
@@ -101,4 +95,8 @@ function getStyles(theme: Theme) {
       tintColor: 'white'
     }
   });
+}
+
+interface TodoListItemProps {
+  todo: Todo & Realm.Object;
 }

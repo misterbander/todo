@@ -6,7 +6,9 @@ import { RootStackParamList } from './app/RootStackParamList';
 import TodoListScreen from './app/TodoListScreen';
 import TodoDetailsScreen from './app/TodoDetailsScreen';
 import { darkTheme, lightTheme } from './app/constants';
+import TodoContext from './app/model/Todo';
 
+const { RealmProvider } = TodoContext;
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
@@ -14,25 +16,27 @@ export default function App() {
   const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <NavigationContainer theme={theme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.colors.background
-          },
-          headerShadowVisible: false
-        }}>
-        <Stack.Screen
-          name="TodoList"
-          component={TodoListScreen}
-          options={{ title: 'Todo List' }}
-        />
-        <Stack.Screen
-          name="TodoDetails"
-          component={TodoDetailsScreen}
-          options={{ title: '' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RealmProvider>
+      <NavigationContainer theme={theme}>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: theme.colors.background
+            },
+            headerShadowVisible: false
+          }}>
+          <Stack.Screen
+            name="TodoList"
+            component={TodoListScreen}
+            options={{ title: 'Todo List' }}
+          />
+          <Stack.Screen
+            name="TodoDetails"
+            component={TodoDetailsScreen}
+            options={{ title: '' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RealmProvider>
   );
 }

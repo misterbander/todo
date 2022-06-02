@@ -9,10 +9,7 @@ import {
   View
 } from 'react-native';
 
-export default function FloatingTextButton({
-  title,
-  onPress
-}: FloatingTextButtonProps) {
+export default function TextButton({ title, onPress }: TextButtonProps) {
   return Platform.OS === 'android' ? (
     <TouchableNativeFeedback onPress={onPress}>
       <View style={styles.button}>
@@ -30,11 +27,7 @@ export default function FloatingTextButton({
 
 const styles = StyleSheet.create({
   button: {
-    position: 'absolute',
-    bottom: 16,
-    left: 0,
-    right: 0,
-    margin: 10,
+    marginBottom: 16,
     padding: 20,
     borderRadius: 8,
     backgroundColor: '#f9a1ff',
@@ -48,7 +41,7 @@ const styles = StyleSheet.create({
   }
 });
 
-interface FloatingTextButtonProps {
+interface TextButtonProps {
   title: string;
   onPress?: (event: GestureResponderEvent) => void;
 }

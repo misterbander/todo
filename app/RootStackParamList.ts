@@ -1,4 +1,6 @@
+import { TodoDetailsScreenProps } from './TodoDetailsScreen';
+
 export type RootStackParamList = {
   TodoList: undefined;
-  TodoDetails: undefined;
+  TodoDetails: TodoDetailsScreenProps;
 };
