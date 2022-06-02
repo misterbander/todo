@@ -1,18 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Theme, useNavigation, useTheme } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import moment from 'moment';
 import { RootStackParamList } from '../RootStackParamList';
 import RoundIconButton from './RoundIconButton';
-import { Todo } from '../model/Todo';
+import TodoContext, { Todo } from '../model/Todo';
 import editIcon from '../images/edit.png';
 import deleteIcon from '../images/delete.png';
+
+const { useRealm } = TodoContext;
 
 export default function TodoListItem({ todo }: TodoListItemProps) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const styles = getStyles(useTheme());
+  const realm = useRealm();
 
   return (
     <View style={styles.container}>
@@ -43,6 +46,25 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
           buttonStyle={styles.roundButton}
           iconStyle={styles.roundButtonIcon}
           icon={deleteIcon}
+          onPress={() => {
+            Alert.alert(
+              'Confirm Delete',
+              `Are you sure you want to delete "${todo.title}"?`,
+              [
+                {
+                  text: 'Cancel'
+                },
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    realm.write(() => {
+                      realm.delete(todo);
+                    });
+                  }
+                }
+              ]
+            );
+          }}
         />
       </View>
     </View>
